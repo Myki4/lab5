@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cmath>
+#include <stdexcept>
+
+class Eq 
+{
+public:
+    virtual void findRoots() const = 0;
+};
+
+class LinearEq : public Eq 
+{
+private:
+    double a;
+    double b;
+
+public:
+    LinearEq(double a, double b) : a(a), b(b) {}
+    void findRoots() const override 
+    {
+        if (a == 0) 
+        {
+            throw std::invalid_argument("Не є лiнiйним рiвнянням (a = 0)");
+        }
+        double root = -b / a;
+        std::cout << "Корiнь лiнiйного рiвняння: " << root << std::endl;
+    }
+};
+
+class QuadraticEq : public Eq 
+{
+private:
+    double a;
+    double b;
+    double c;
+
+public:
+    QuadraticEq(double a, double b, double c) : a(a), b(b), c(c) {}
+
+    void findRoots() const override 
+    {
+        if (a == 0) 
+        {
+            throw std::invalid_argument("Не є квадратним рiвнянням (a = 0)");
+        }
+        double discriminant = b * b - 4 * a * c;
+        if (discriminant > 0) 
+        {
+            double root1 = (-b + sqrt(discriminant)) / (2 * a);
+            double root2 = (-b - sqrt(discriminant)) / (2 * a);
+            std::cout << "Коренi квадратного рiвняння: " << root1 << " i " << root2 << std::endl;
+        }
+        else if (discriminant == 0) 
+        {
+            double root = -b / (2 * a);
+            std::cout << "Корiнь квадратного рiвняння: " << root << std::endl;
+        }
+        else 
+        {
+            std::cout << "Квадратне рiвняння не має дiйсних коренiв" << std::endl;
+        }
+    }
+};
+
+int main()
+{
+    using namespace std;
+    setlocale(LC_ALL, "Ukrainian");
+
+    double a, b, c;
+    cout << "Введiть коефiцiєнти  ";
+    cin >> a >> b >> c;
+
+    Eq* equation;
+
+        if (c == 0) 
+        {
+            equation = new LinearEq(a, b);
+        }
+        else 
+        {
+            equation = new QuadraticEq(a, b, c);
+        }
+
+        equation->findRoots();
+        delete equation;
+
+    return 0;
+}
+
